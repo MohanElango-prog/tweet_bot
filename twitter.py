@@ -3,21 +3,21 @@ import requests
 import tweepy
 
 def authenticate():
-    """Authenticate with the Twitter API using credentials from environment variables."""
-    api_key = os.getenv("TWITTER_API_KEY")
-    api_secret = os.getenv("TWITTER_API_SECRET")
-    access_token = os.getenv("TWITTER_ACCESS_TOKEN")
-    access_secret = os.getenv("TWITTER_ACCESS_SECRET")
-    
-    auth = tweepy.OAuthHandler(api_key, api_secret)
-    auth.set_access_token(access_token, access_secret)
-    return tweepy.API(auth)
+    """Authenticate using Twitter API v2."""
+    client = tweepy.Client(
+        consumer_key=os.getenv("TWITTER_API_KEY"),
+        consumer_secret=os.getenv("TWITTER_API_SECRET"),
+        access_token=os.getenv("TWITTER_ACCESS_TOKEN"),
+        access_token_secret=os.getenv("TWITTER_ACCESS_SECRET")
+    )
+    return client
+
 
 def get_quote():
     """Fetch a random philosophical quote from Quotable API."""
     url = "https://api.quotable.io/random?tags=philosophy"
     try:
-        response = requests.get(url, verify=False)
+        response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
             return f"{data['content']} - {data['author']}"
@@ -29,12 +29,12 @@ def get_quote():
         return "The only true wisdom is in knowing you know nothing. - Socrates"
 
 def post_tweet():
-    """Post a tweet with a philosophical quote."""
-    api = authenticate()
+    """Post a tweet using Twitter API v2."""
+    client = authenticate()
     quote = get_quote()
     try:
-        api.update_status(quote)
-        print("Tweet posted successfully:", quote)
+        response = client.create_tweet(text=quote)
+        print("Tweet posted successfully:", response.data)
     except Exception as e:
         print("Error posting tweet:", e)
 
