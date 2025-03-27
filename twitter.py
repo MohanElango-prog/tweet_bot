@@ -15,7 +15,7 @@ def authenticate():
 
 def get_quote():
     """Fetch a random philosophical quote from Quotable API."""
-    url = "https://api.quotable.io/random?tags=philosophy"
+    url = "https://zenquotes.io/api/random"
     try:
         response = requests.get(url)
         if response.status_code == 200:
