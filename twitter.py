@@ -17,7 +17,7 @@ def get_quote():
     """Fetch a random philosophical quote from Quotable API."""
     url = "https://api.quotable.io/random?tags=philosophy"
     try:
-        response = requests.get(url)
+        response = requests.get(url, verify=False)
         if response.status_code == 200:
             data = response.json()
             return f"{data['content']} - {data['author']}"
