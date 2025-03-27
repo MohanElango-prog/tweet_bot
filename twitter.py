@@ -14,19 +14,20 @@ def authenticate():
 
 
 def get_quote():
-    """Fetch a random philosophical quote from Quotable API."""
+    """Fetch a random philosophical quote from ZenQuotes API."""
     url = "https://zenquotes.io/api/random"
     try:
         response = requests.get(url)
         if response.status_code == 200:
-            data = response.json()
-            return f"{data['content']} - {data['author']}"
+            data = response.json()[0]  # ZenQuotes API returns a list, so we get the first item
+            return f"{data['q']} - {data['a']}"  # 'q' for quote, 'a' for author
         else:
             print("Failed to fetch quote, using fallback.")
             return "The only true wisdom is in knowing you know nothing. - Socrates"
     except Exception as e:
         print("Error fetching quote:", e)
         return "The only true wisdom is in knowing you know nothing. - Socrates"
+
 
 def post_tweet():
     """Post a tweet using Twitter API v2."""
